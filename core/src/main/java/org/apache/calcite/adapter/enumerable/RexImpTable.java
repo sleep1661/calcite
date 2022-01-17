@@ -214,6 +214,7 @@ import static org.apache.calcite.sql.fun.SqlStdOperatorTable.GREATER_THAN_OR_EQU
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.GROUPING;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.GROUPING_ID;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.HOP;
+import static org.apache.calcite.sql.fun.SqlStdOperatorTable.IN;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.INITCAP;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.INTERSECTION;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.IS_A_SET;
@@ -275,6 +276,7 @@ import static org.apache.calcite.sql.fun.SqlStdOperatorTable.MULTISET_UNION_DIST
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.NEXT_VALUE;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.NOT;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.NOT_EQUALS;
+import static org.apache.calcite.sql.fun.SqlStdOperatorTable.NOT_IN;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.NOT_SUBMULTISET_OF;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.NTH_VALUE;
 import static org.apache.calcite.sql.fun.SqlStdOperatorTable.NTILE;
@@ -494,6 +496,15 @@ public class RexImpTable {
     map.put(SIMILAR_TO,
         new MethodImplementor(BuiltInMethod.SIMILAR.method, NullPolicy.STRICT,
         false));
+
+    // IN and NOT_IN
+    map.put(IN,
+        new MethodImplementor(BuiltInMethod.IN.method, NullPolicy.STRICT,
+            false));
+    map.put(NOT_IN,
+        NotImplementor.of(
+            new MethodImplementor(BuiltInMethod.IN.method, NullPolicy.STRICT,
+            false)));
 
     // POSIX REGEX
     final MethodImplementor posixRegexImplementorCaseSensitive =

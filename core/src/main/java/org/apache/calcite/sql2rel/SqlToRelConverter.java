@@ -1145,6 +1145,7 @@ public class SqlToRelConverter {
 
       if (query instanceof SqlNodeList) {
         SqlNodeList valueList = (SqlNodeList) query;
+        SqlKind kind = subQuery.node.getKind();
         // When the list size under the threshold or the list references columns, we convert to OR.
         if (valueList.size() < config.getInSubQueryThreshold()
             || valueList.accept(new SqlIdentifierFinder())) {
@@ -1155,6 +1156,14 @@ public class SqlToRelConverter {
                   valueList,
                   (SqlInOperator) call.getOperator());
           return;
+        } else if (leftKeys.size() == 1 && (kind == SqlKind.IN || kind == SqlKind.NOT_IN)) {
+          List<RexNode> exprs = new ArrayList<>();
+          exprs.addAll(leftKeys);
+          for (int i = 0; i < valueList.size(); i++) {
+            exprs.add(convertExpression(valueList.get(i)));
+          }
+          subQuery.expr = rexBuilder.makeCall(kind == SqlKind.IN
+              ? SqlStdOperatorTable.IN : SqlStdOperatorTable.NOT_IN, exprs);
         }
 
         // Otherwise, let convertExists translate

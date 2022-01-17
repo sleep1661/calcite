@@ -2803,6 +2803,11 @@ public class SqlFunctions {
     return inputList -> Linq4j.asEnumerable(inputList).select(v -> structAccess(v, 0, null));
   }
 
+  /** Support the IN function. */
+  public static boolean in(Object value, Object[] options) {
+    return Arrays.asList(options).contains(value);
+  }
+
   public static Function1<Object, Enumerable<ComparableList<Comparable>>> flatProduct(
       final int[] fieldCounts, final boolean withOrdinality,
       final FlatProductInputType[] inputTypes) {

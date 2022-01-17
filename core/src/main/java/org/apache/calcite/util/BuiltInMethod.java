@@ -636,7 +636,9 @@ public enum BuiltInMethod {
       long.class),
   BIG_DECIMAL_ADD(BigDecimal.class, "add", BigDecimal.class),
   BIG_DECIMAL_NEGATE(BigDecimal.class, "negate"),
-  COMPARE_TO(Comparable.class, "compareTo", Object.class);
+  COMPARE_TO(Comparable.class, "compareTo", Object.class),
+  IN(SqlFunctions.class, "in", Object.class, Object[].class);
+
 
   @SuppressWarnings("ImmutableEnumChecker")
   public final Method method;
